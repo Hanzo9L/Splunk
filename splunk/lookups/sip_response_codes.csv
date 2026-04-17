@@ -1,0 +1,17 @@
+final_sip_code,sip_description,sip_category
+200,OK - Call Successful,Success
+400,Bad Request,Client Error
+401,Unauthorized,Client Error
+403,Forbidden,Client Error
+404,Not Found - Number does not exist,Client Error
+408,Request Timeout,Client Error
+480,Temporarily Unavailable,Client Error
+486,Busy Here,Client Error
+487,Request Terminated,Client Error
+488,Not Acceptable Here,Client Error
+500,Server Internal Error,Server Error
+502,Bad Gateway - SBC error,Server Error
+503,Service Unavailable,Server Error
+504,Gateway Timeout,Server Error
+600,Busy Everywhere,Global Failure
+603,Decline,Global Failure

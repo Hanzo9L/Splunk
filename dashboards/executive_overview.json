@@ -1,0 +1,295 @@
+{
+  "title": "Teams Executive Overview",
+  "description": "Bank of America — Microsoft Teams Direct Routing Migration: Executive KPI summary, call volume trends, quality scores, and active user metrics.",
+  "visualizations": {
+    "viz_total_calls": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_total_calls" },
+      "title": "Total Calls",
+      "options": {
+        "colorMode": "block",
+        "backgroundColor": "#1E3A5F",
+        "majorColor": "#FFFFFF",
+        "trendDisplayMode": "absolute",
+        "trendColor": "#5CB85C",
+        "unitPosition": "after",
+        "majorFontSize": 36,
+        "showTrendIndicator": true,
+        "showComparison": true,
+        "comparisonType": "ratio",
+        "comparisonDisplay": "vs prior period"
+      }
+    },
+    "viz_active_users": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_active_users" },
+      "title": "Active Users",
+      "options": {
+        "colorMode": "block",
+        "backgroundColor": "#1565C0",
+        "majorColor": "#FFFFFF",
+        "trendDisplayMode": "absolute",
+        "showTrendIndicator": true,
+        "majorFontSize": 36
+      }
+    },
+    "viz_avg_mos": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_avg_mos" },
+      "title": "Avg Audio MOS Score",
+      "options": {
+        "colorMode": "block",
+        "majorColor": "#FFFFFF",
+        "trendDisplayMode": "absolute",
+        "showTrendIndicator": true,
+        "majorFontSize": 36,
+        "unit": " / 5.0",
+        "unitPosition": "after",
+        "thresholds": {
+          "fieldColors": {
+            "ranges": [
+              { "from": 0,   "to": 2.5, "value": "#D9534F" },
+              { "from": 2.5, "to": 3.5, "value": "#F0AD4E" },
+              { "from": 3.5, "to": 5.0, "value": "#5CB85C" }
+            ]
+          }
+        }
+      }
+    },
+    "viz_failure_rate": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_failure_rate" },
+      "title": "Call Failure Rate",
+      "options": {
+        "colorMode": "block",
+        "majorColor": "#FFFFFF",
+        "trendDisplayMode": "absolute",
+        "showTrendIndicator": true,
+        "majorFontSize": 36,
+        "unit": "%",
+        "unitPosition": "after",
+        "thresholds": {
+          "fieldColors": {
+            "ranges": [
+              { "from": 0,  "to": 2,  "value": "#5CB85C" },
+              { "from": 2,  "to": 5,  "value": "#F0AD4E" },
+              { "from": 5,  "to": 100,"value": "#D9534F" }
+            ]
+          }
+        }
+      }
+    },
+    "viz_dr_calls": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_dr_calls" },
+      "title": "Direct Routing Calls",
+      "options": {
+        "colorMode": "block",
+        "backgroundColor": "#0D47A1",
+        "majorColor": "#FFFFFF",
+        "showTrendIndicator": true,
+        "majorFontSize": 36
+      }
+    },
+    "viz_call_volume_trend": {
+      "type": "splunk.line",
+      "dataSources": { "primary": "ds_call_volume_trend" },
+      "title": "Call Volume Over Time",
+      "options": {
+        "xAxisTitleText": "Time",
+        "yAxisTitleText": "Call Count",
+        "seriesColors": ["#1565C0", "#F57C00", "#2E7D32"],
+        "showDataLabels": false,
+        "legendDisplay": "bottom",
+        "nullValueDisplay": "connect",
+        "lineWidth": 2,
+        "showMarkers": false
+      }
+    },
+    "viz_mos_trend": {
+      "type": "splunk.line",
+      "dataSources": { "primary": "ds_mos_trend" },
+      "title": "Average MOS Score Trend",
+      "options": {
+        "xAxisTitleText": "Time",
+        "yAxisTitleText": "MOS Score",
+        "yAxisScale": { "min": 1, "max": 5 },
+        "seriesColors": ["#2E7D32"],
+        "lineWidth": 2,
+        "showMarkers": false,
+        "nullValueDisplay": "connect",
+        "annotationColor": "#D9534F"
+      }
+    },
+    "viz_call_type_split": {
+      "type": "splunk.pie",
+      "dataSources": { "primary": "ds_call_type_split" },
+      "title": "Call Type Distribution",
+      "options": {
+        "seriesColors": ["#1565C0", "#F57C00", "#2E7D32", "#7B1FA2"],
+        "showDonutHole": true,
+        "legendDisplay": "right",
+        "showPercent": true
+      }
+    },
+    "viz_top_users": {
+      "type": "splunk.table",
+      "dataSources": { "primary": "ds_top_users" },
+      "title": "Top 10 Active Users",
+      "options": {
+        "count": 10,
+        "columnFormat": {
+          "total_calls": { "data": { "type": "sparkline" } },
+          "avg_mos": {
+            "data": {
+              "type": "color",
+              "scale": {
+                "type": "range",
+                "field": "avg_mos",
+                "ranges": [
+                  { "from": 0, "to": 3.5, "background": "#FFCDD2" },
+                  { "from": 3.5, "to": 5, "background": "#C8E6C9" }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "viz_quality_band_bar": {
+      "type": "splunk.bar",
+      "dataSources": { "primary": "ds_quality_band" },
+      "title": "Calls by Quality Band",
+      "options": {
+        "seriesColors": ["#5CB85C", "#A5D6A7", "#F0AD4E", "#EF9A9A", "#D9534F"],
+        "xAxisTitleText": "Quality Band",
+        "yAxisTitleText": "Call Count",
+        "legendDisplay": "none",
+        "showDataLabels": true
+      }
+    },
+    "viz_department_adoption": {
+      "type": "splunk.column",
+      "dataSources": { "primary": "ds_department_adoption" },
+      "title": "Teams Adoption by Department",
+      "options": {
+        "seriesColors": ["#1565C0"],
+        "xAxisTitleText": "Department",
+        "yAxisTitleText": "Active Users",
+        "showDataLabels": false,
+        "legendDisplay": "none"
+      }
+    }
+  },
+  "dataSources": {
+    "ds_total_calls": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | stats count as total_calls",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_active_users": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | stats dc(caller_upn) as active_users",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_avg_mos": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | stats avg(audio_mos) as avg_mos | eval avg_mos=round(avg_mos,2)",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_failure_rate": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:dr_record | eval failed=if(final_sip_code!=200,1,0) | stats avg(failed)*100 as failure_rate | eval failure_rate=round(failure_rate,2)",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_dr_calls": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:dr_record | stats count as dr_calls",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_call_volume_trend": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls (sourcetype=teams:call:record OR sourcetype=teams:call:dr_record OR sourcetype=teams:call:pstn) | timechart span=1h count by sourcetype",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_mos_trend": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | timechart span=1h avg(audio_mos) as avg_mos | eval avg_mos=round(avg_mos,2)",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_call_type_split": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | stats count by call_type | rename call_type as \"Call Type\", count as \"Count\"",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_top_users": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | stats count as total_calls, avg(duration_sec) as avg_duration_sec by caller_upn | join type=left caller_upn [ search index=teams_quality sourcetype=teams:cqd:stream | stats avg(audio_mos) as avg_mos by caller_upn ] | eval avg_mos=round(avg_mos,2), avg_duration_min=round(avg_duration_sec/60,1) | sort -total_calls | head 10 | table caller_upn, total_calls, avg_duration_min, avg_mos",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_quality_band": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | eval quality_band=case(audio_mos>=4.0,\"Excellent\",audio_mos>=3.5,\"Good\",audio_mos>=3.0,\"Fair\",audio_mos>=2.5,\"Poor\",isnotnull(audio_mos),\"Bad\",true(),\"Unknown\") | stats count by quality_band | sort -count",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_department_adoption": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | lookup teams_user_dept_lookup user_upn AS caller_upn OUTPUT department | stats dc(caller_upn) as active_users by department | sort -active_users | head 15",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    }
+  },
+  "inputs": {
+    "input_timerange": {
+      "type": "input.timerange",
+      "options": {
+        "token": "time",
+        "defaultValue": { "earliest": "-24h@h", "latest": "now" }
+      },
+      "title": "Time Range"
+    }
+  },
+  "layout": {
+    "type": "absolute",
+    "options": {
+      "width": 1440,
+      "height": 1080,
+      "display": "auto-scale"
+    },
+    "structure": [
+      { "item": "viz_total_calls",     "type": "block", "position": { "x": 20,  "y": 20,  "w": 240, "h": 120 } },
+      { "item": "viz_active_users",    "type": "block", "position": { "x": 280, "y": 20,  "w": 240, "h": 120 } },
+      { "item": "viz_avg_mos",         "type": "block", "position": { "x": 540, "y": 20,  "w": 240, "h": 120 } },
+      { "item": "viz_failure_rate",    "type": "block", "position": { "x": 800, "y": 20,  "w": 240, "h": 120 } },
+      { "item": "viz_dr_calls",        "type": "block", "position": { "x": 1060,"y": 20,  "w": 360, "h": 120 } },
+      { "item": "viz_call_volume_trend","type": "block", "position": { "x": 20,  "y": 160, "w": 860, "h": 260 } },
+      { "item": "viz_mos_trend",       "type": "block", "position": { "x": 900, "y": 160, "w": 520, "h": 260 } },
+      { "item": "viz_call_type_split", "type": "block", "position": { "x": 20,  "y": 440, "w": 340, "h": 280 } },
+      { "item": "viz_quality_band_bar","type": "block", "position": { "x": 380, "y": 440, "w": 500, "h": 280 } },
+      { "item": "viz_department_adoption","type": "block","position": { "x": 900, "y": 440, "w": 520, "h": 280 } },
+      { "item": "viz_top_users",       "type": "block", "position": { "x": 20,  "y": 740, "w": 1400,"h": 300 } }
+    ],
+    "globalInputs": ["input_timerange"]
+  }
+}

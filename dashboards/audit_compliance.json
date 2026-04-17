@@ -1,0 +1,295 @@
+{
+  "title": "Teams Audit & Compliance",
+  "description": "Bank of America — Teams compliance and security monitoring: admin actions, policy changes, user role modifications, eDiscovery events, and anomaly detection. Critical for regulatory requirements.",
+  "visualizations": {
+    "viz_total_audit_events": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_total_audit_events" },
+      "title": "Total Audit Events",
+      "options": {
+        "colorMode": "block",
+        "backgroundColor": "#1A237E",
+        "majorColor": "#FFFFFF",
+        "majorFontSize": 36,
+        "showTrendIndicator": true
+      }
+    },
+    "viz_config_changes": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_config_changes" },
+      "title": "Config Changes",
+      "options": {
+        "colorMode": "block",
+        "backgroundColor": "#880E4F",
+        "majorColor": "#FFFFFF",
+        "majorFontSize": 36,
+        "showTrendIndicator": true
+      }
+    },
+    "viz_policy_changes": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_policy_changes" },
+      "title": "Policy Assignments",
+      "options": {
+        "colorMode": "block",
+        "backgroundColor": "#4A148C",
+        "majorColor": "#FFFFFF",
+        "majorFontSize": 36,
+        "showTrendIndicator": true
+      }
+    },
+    "viz_failed_operations": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_failed_operations" },
+      "title": "Failed Operations",
+      "options": {
+        "colorMode": "block",
+        "majorColor": "#FFFFFF",
+        "majorFontSize": 36,
+        "showTrendIndicator": true,
+        "thresholds": {
+          "fieldColors": {
+            "ranges": [
+              { "from": 0,  "to": 5,   "value": "#2E7D32" },
+              { "from": 5,  "to": 20,  "value": "#E65100" },
+              { "from": 20, "to": 9999,"value": "#C62828" }
+            ]
+          }
+        }
+      }
+    },
+    "viz_audit_timeline": {
+      "type": "splunk.column",
+      "dataSources": { "primary": "ds_audit_timeline" },
+      "title": "Audit Events Over Time by Category",
+      "options": {
+        "xAxisTitleText": "Time",
+        "yAxisTitleText": "Event Count",
+        "seriesColors": ["#1565C0","#880E4F","#E65100","#2E7D32","#6A1B9A"],
+        "legendDisplay": "bottom",
+        "showDataLabels": false,
+        "stackMode": "stacked"
+      }
+    },
+    "viz_top_operations": {
+      "type": "splunk.bar",
+      "dataSources": { "primary": "ds_top_operations" },
+      "title": "Top Audit Operations",
+      "options": {
+        "xAxisTitleText": "Count",
+        "yAxisTitleText": "Operation",
+        "seriesColors": ["#1565C0"],
+        "orientation": "horizontal",
+        "showDataLabels": true,
+        "legendDisplay": "none"
+      }
+    },
+    "viz_recent_admin_actions": {
+      "type": "splunk.table",
+      "dataSources": { "primary": "ds_recent_admin_actions" },
+      "title": "Recent Admin Actions",
+      "options": {
+        "count": 25,
+        "columnFormat": {
+          "result": {
+            "data": {
+              "type": "color",
+              "scale": {
+                "type": "categorical",
+                "field": "result",
+                "categories": [
+                  { "value": "Success",   "background": "#E8F5E9" },
+                  { "value": "Failed",    "background": "#FFCDD2" },
+                  { "value": "Failure",   "background": "#FFCDD2" },
+                  { "value": "Partial",   "background": "#FFF3E0" }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "viz_top_admin_users": {
+      "type": "splunk.column",
+      "dataSources": { "primary": "ds_top_admin_users" },
+      "title": "Most Active Admin Users",
+      "options": {
+        "xAxisTitleText": "User",
+        "yAxisTitleText": "Actions",
+        "seriesColors": ["#1A237E"],
+        "showDataLabels": true,
+        "legendDisplay": "none"
+      }
+    },
+    "viz_policy_change_table": {
+      "type": "splunk.table",
+      "dataSources": { "primary": "ds_policy_change_table" },
+      "title": "Policy Assignment Changes",
+      "options": { "count": 15 }
+    },
+    "viz_anomaly_indicators": {
+      "type": "splunk.table",
+      "dataSources": { "primary": "ds_anomaly_indicators" },
+      "title": "Anomaly Indicators — Unusual Activity",
+      "options": {
+        "count": 10,
+        "columnFormat": {
+          "anomaly_type": {
+            "data": {
+              "type": "color",
+              "scale": {
+                "type": "categorical",
+                "field": "anomaly_type",
+                "categories": [
+                  { "value": "Off-Hours Admin", "background": "#FFF3E0", "text": "#E65100" },
+                  { "value": "Repeated Failure", "background": "#FFCDD2", "text": "#C62828" },
+                  { "value": "Bulk Operation", "background": "#EDE7F6", "text": "#4527A0" }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "viz_team_creation_deletion": {
+      "type": "splunk.line",
+      "dataSources": { "primary": "ds_team_creation_deletion" },
+      "title": "Team Creation vs Deletion Over Time",
+      "options": {
+        "xAxisTitleText": "Date",
+        "yAxisTitleText": "Count",
+        "seriesColors": ["#2E7D32", "#C62828"],
+        "lineWidth": 2,
+        "legendDisplay": "bottom",
+        "nullValueDisplay": "connect"
+      }
+    }
+  },
+  "dataSources": {
+    "ds_total_audit_events": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_audit sourcetype=teams:audit:log | stats count as total_events",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_config_changes": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_audit sourcetype=teams:audit:log operation IN (\"TeamSettingChanged\",\"ChannelSettingChanged\",\"TeamUpdated\",\"MeetingSettingChanged\") | stats count as config_changes",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_policy_changes": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_audit sourcetype=teams:audit:log operation IN (\"PolicyAssigned\",\"PolicyUnassigned\",\"BulkUpdate\") | stats count as policy_changes",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_failed_operations": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_audit sourcetype=teams:audit:log (result=\"Failed\" OR result=\"Failure\") | stats count as failed_ops",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_audit_timeline": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_audit sourcetype=teams:audit:log | eval category=case(operation IN (\"PolicyAssigned\",\"PolicyUnassigned\"),\"Policy\", operation IN (\"TeamCreated\",\"TeamDeleted\",\"ChannelCreated\",\"ChannelDeleted\"),\"Structure\", operation IN (\"TeamSettingChanged\",\"ChannelSettingChanged\"),\"Config\", operation IN (\"MemberAdded\",\"MemberRemoved\",\"MemberRoleChanged\"),\"Membership\", true(),\"Other\") | timechart span=1h count by category",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_top_operations": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_audit sourcetype=teams:audit:log | stats count by operation | sort -count | head 15",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_recent_admin_actions": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_audit sourcetype=teams:audit:log | eval event_time=strftime(_time,\"%Y-%m-%d %H:%M:%S\") | lookup teams_user_dept_lookup user_upn OUTPUT department | table event_time, user_upn, department, operation, object_name, result | sort -_time | head 25",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_top_admin_users": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_audit sourcetype=teams:audit:log | stats count as actions by user_upn | sort -actions | head 10",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_policy_change_table": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_audit sourcetype=teams:audit:log operation IN (\"PolicyAssigned\",\"PolicyUnassigned\",\"BulkUpdate\") | eval event_time=strftime(_time,\"%Y-%m-%d %H:%M:%S\") | lookup teams_user_dept_lookup user_upn OUTPUT department | table event_time, user_upn, department, operation, object_name, result | sort -_time | head 15",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_anomaly_indicators": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_audit sourcetype=teams:audit:log | eval hour=tonumber(strftime(_time,\"%H\")), anomaly_type=case( (result=\"Failed\" OR result=\"Failure\"),\"Repeated Failure\", (hour<7 OR hour>20),\"Off-Hours Admin\", true(),null() ) | where isnotnull(anomaly_type) | eval event_time=strftime(_time,\"%Y-%m-%d %H:%M:%S\") | table event_time, user_upn, operation, object_name, anomaly_type, result | sort -_time | head 10",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_team_creation_deletion": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_audit sourcetype=teams:audit:log operation IN (\"TeamCreated\",\"TeamDeleted\") | timechart span=1d count by operation",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    }
+  },
+  "inputs": {
+    "input_timerange": {
+      "type": "input.timerange",
+      "options": {
+        "token": "time",
+        "defaultValue": { "earliest": "-7d@d", "latest": "now" }
+      },
+      "title": "Time Range"
+    },
+    "input_operation_filter": {
+      "type": "input.text",
+      "options": {
+        "token": "operation_filter",
+        "defaultValue": "*"
+      },
+      "title": "Filter by Operation (e.g. PolicyAssigned)"
+    },
+    "input_user_filter": {
+      "type": "input.text",
+      "options": {
+        "token": "user_filter",
+        "defaultValue": "*"
+      },
+      "title": "Filter by User UPN"
+    }
+  },
+  "layout": {
+    "type": "absolute",
+    "options": {
+      "width": 1440,
+      "height": 1080,
+      "display": "auto-scale"
+    },
+    "structure": [
+      { "item": "viz_total_audit_events",    "type": "block", "position": { "x": 20,  "y": 20,  "w": 320, "h": 120 } },
+      { "item": "viz_config_changes",        "type": "block", "position": { "x": 360, "y": 20,  "w": 320, "h": 120 } },
+      { "item": "viz_policy_changes",        "type": "block", "position": { "x": 700, "y": 20,  "w": 320, "h": 120 } },
+      { "item": "viz_failed_operations",     "type": "block", "position": { "x": 1040,"y": 20,  "w": 380, "h": 120 } },
+      { "item": "viz_audit_timeline",        "type": "block", "position": { "x": 20,  "y": 160, "w": 860, "h": 260 } },
+      { "item": "viz_top_operations",        "type": "block", "position": { "x": 900, "y": 160, "w": 520, "h": 260 } },
+      { "item": "viz_top_admin_users",       "type": "block", "position": { "x": 20,  "y": 440, "w": 700, "h": 240 } },
+      { "item": "viz_team_creation_deletion","type": "block", "position": { "x": 740, "y": 440, "w": 680, "h": 240 } },
+      { "item": "viz_anomaly_indicators",    "type": "block", "position": { "x": 20,  "y": 700, "w": 1400,"h": 200 } },
+      { "item": "viz_policy_change_table",   "type": "block", "position": { "x": 20,  "y": 920, "w": 680, "h": 260 } },
+      { "item": "viz_recent_admin_actions",  "type": "block", "position": { "x": 720, "y": 920, "w": 700, "h": 260 } }
+    ],
+    "globalInputs": ["input_timerange", "input_operation_filter", "input_user_filter"]
+  }
+}

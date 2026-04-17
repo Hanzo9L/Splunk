@@ -1,0 +1,276 @@
+{
+  "title": "Teams User Adoption",
+  "description": "Bank of America — Microsoft Teams adoption metrics: active users, department-level adoption rates, meeting vs. call split, device type breakdown, and weekly trends.",
+  "visualizations": {
+    "viz_total_active_users": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_total_active_users" },
+      "title": "Active Teams Users",
+      "options": {
+        "colorMode": "block",
+        "backgroundColor": "#1565C0",
+        "majorColor": "#FFFFFF",
+        "majorFontSize": 36,
+        "showTrendIndicator": true,
+        "trendDisplayMode": "absolute"
+      }
+    },
+    "viz_total_meetings": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_total_meetings" },
+      "title": "Meetings Held",
+      "options": {
+        "colorMode": "block",
+        "backgroundColor": "#283593",
+        "majorColor": "#FFFFFF",
+        "majorFontSize": 36,
+        "showTrendIndicator": true
+      }
+    },
+    "viz_avg_call_per_user": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_avg_call_per_user" },
+      "title": "Avg Calls Per User",
+      "options": {
+        "colorMode": "block",
+        "backgroundColor": "#0D47A1",
+        "majorColor": "#FFFFFF",
+        "majorFontSize": 36
+      }
+    },
+    "viz_new_users_trend": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_new_users_7d" },
+      "title": "New Users (7 days)",
+      "options": {
+        "colorMode": "block",
+        "backgroundColor": "#1B5E20",
+        "majorColor": "#FFFFFF",
+        "majorFontSize": 36,
+        "showTrendIndicator": true
+      }
+    },
+    "viz_active_users_trend": {
+      "type": "splunk.area",
+      "dataSources": { "primary": "ds_active_users_trend" },
+      "title": "Daily Active Users Trend",
+      "options": {
+        "xAxisTitleText": "Date",
+        "yAxisTitleText": "Active Users",
+        "seriesColors": ["#1565C0"],
+        "areaOpacity": 0.25,
+        "lineWidth": 2,
+        "nullValueDisplay": "connect",
+        "legendDisplay": "none"
+      }
+    },
+    "viz_call_vs_meeting": {
+      "type": "splunk.line",
+      "dataSources": { "primary": "ds_call_vs_meeting" },
+      "title": "Calls vs. Meetings Over Time",
+      "options": {
+        "xAxisTitleText": "Date",
+        "yAxisTitleText": "Count",
+        "seriesColors": ["#1565C0", "#F57C00"],
+        "lineWidth": 2,
+        "legendDisplay": "bottom",
+        "nullValueDisplay": "connect"
+      }
+    },
+    "viz_department_adoption_table": {
+      "type": "splunk.table",
+      "dataSources": { "primary": "ds_department_adoption_table" },
+      "title": "Adoption by Department",
+      "options": {
+        "count": 20,
+        "columnFormat": {
+          "adoption_rate_pct": {
+            "data": {
+              "type": "color",
+              "scale": {
+                "type": "range",
+                "field": "adoption_rate_pct",
+                "ranges": [
+                  { "from": 0,  "to": 50, "background": "#FFCDD2" },
+                  { "from": 50, "to": 80, "background": "#FFF3E0" },
+                  { "from": 80, "to": 100,"background": "#E8F5E9" }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "viz_department_bar": {
+      "type": "splunk.bar",
+      "dataSources": { "primary": "ds_department_bar" },
+      "title": "Active Users by Department (Top 15)",
+      "options": {
+        "xAxisTitleText": "Active Users",
+        "yAxisTitleText": "Department",
+        "seriesColors": ["#1565C0"],
+        "showDataLabels": true,
+        "legendDisplay": "none",
+        "orientation": "horizontal"
+      }
+    },
+    "viz_device_distribution": {
+      "type": "splunk.pie",
+      "dataSources": { "primary": "ds_device_distribution" },
+      "title": "Device Type Distribution",
+      "options": {
+        "showDonutHole": true,
+        "legendDisplay": "right",
+        "showPercent": true,
+        "seriesColors": ["#1565C0","#0288D1","#00897B","#F57C00","#7B1FA2","#455A64"]
+      }
+    },
+    "viz_weekly_call_heatmap": {
+      "type": "splunk.column",
+      "dataSources": { "primary": "ds_weekly_call_heatmap" },
+      "title": "Call Activity by Day of Week",
+      "options": {
+        "xAxisTitleText": "Day of Week",
+        "yAxisTitleText": "Call Count",
+        "seriesColors": ["#1565C0"],
+        "showDataLabels": true,
+        "legendDisplay": "none"
+      }
+    },
+    "viz_top_heavy_callers": {
+      "type": "splunk.table",
+      "dataSources": { "primary": "ds_top_heavy_callers" },
+      "title": "Top 10 Call-Heavy Users",
+      "options": {
+        "count": 10,
+        "columnFormat": {
+          "total_calls": {
+            "data": { "type": "bar", "scale": { "type": "minmax", "field": "total_calls" } }
+          }
+        }
+      }
+    }
+  },
+  "dataSources": {
+    "ds_total_active_users": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | stats dc(caller_upn) as active_users",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_total_meetings": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record call_type=groupCall | stats count as meetings",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_avg_call_per_user": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | stats count as calls, dc(caller_upn) as users | eval avg_calls_per_user=round(calls/users,1) | table avg_calls_per_user",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_new_users_7d": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record earliest=-7d latest=now | stats min(_time) as first_seen by caller_upn | where first_seen >= relative_time(now(),\"-7d\") | stats count as new_users",
+        "queryParameters": { "earliest": "-30d", "latest": "now" }
+      }
+    },
+    "ds_active_users_trend": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | eval date=strftime(_time,\"%Y-%m-%d\") | stats dc(caller_upn) as active_users by date | sort date",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_call_vs_meeting": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | eval activity=if(call_type==\"groupCall\",\"Meeting\",\"Call\") | timechart span=1d count by activity",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_department_adoption_table": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | lookup teams_user_dept_lookup user_upn AS caller_upn OUTPUT department, cost_center | stats dc(caller_upn) as active_callers, count as total_calls, avg(duration_sec) as avg_dur_sec by department, cost_center | eval avg_dur_min=round(avg_dur_sec/60,1) | sort -active_callers | table department, cost_center, active_callers, total_calls, avg_dur_min",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_department_bar": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | lookup teams_user_dept_lookup user_upn AS caller_upn OUTPUT department | stats dc(caller_upn) as active_users by department | sort -active_users | head 15",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_device_distribution": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | where caller_device_type!=\"\" | stats count by caller_device_type | sort -count | rename caller_device_type AS \"Device Type\", count AS \"Streams\"",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_weekly_call_heatmap": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | eval dow=strftime(_time,\"%A\") | eval dow_num=strftime(_time,\"%u\") | stats count by dow, dow_num | sort dow_num | table dow, count",
+        "queryParameters": { "earliest": "-30d@d", "latest": "now" }
+      }
+    },
+    "ds_top_heavy_callers": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_calls sourcetype=teams:call:record | stats count as total_calls, sum(duration_sec) as total_duration_sec, dc(call_type) as call_types by caller_upn | eval total_hours=round(total_duration_sec/3600,1) | lookup teams_user_dept_lookup user_upn AS caller_upn OUTPUT department | sort -total_calls | head 10 | table caller_upn, department, total_calls, total_hours",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    }
+  },
+  "inputs": {
+    "input_timerange": {
+      "type": "input.timerange",
+      "options": {
+        "token": "time",
+        "defaultValue": { "earliest": "-30d@d", "latest": "now" }
+      },
+      "title": "Time Range"
+    },
+    "input_department": {
+      "type": "input.dropdown",
+      "options": {
+        "token": "department",
+        "defaultValue": "*",
+        "items": [{ "label": "All Departments", "value": "*" }],
+        "labelField": "department",
+        "valueField": "department"
+      },
+      "title": "Filter by Department"
+    }
+  },
+  "layout": {
+    "type": "absolute",
+    "options": {
+      "width": 1440,
+      "height": 1080,
+      "display": "auto-scale"
+    },
+    "structure": [
+      { "item": "viz_total_active_users",       "type": "block", "position": { "x": 20,  "y": 20,  "w": 320, "h": 120 } },
+      { "item": "viz_total_meetings",           "type": "block", "position": { "x": 360, "y": 20,  "w": 320, "h": 120 } },
+      { "item": "viz_avg_call_per_user",        "type": "block", "position": { "x": 700, "y": 20,  "w": 320, "h": 120 } },
+      { "item": "viz_new_users_trend",          "type": "block", "position": { "x": 1040,"y": 20,  "w": 380, "h": 120 } },
+      { "item": "viz_active_users_trend",       "type": "block", "position": { "x": 20,  "y": 160, "w": 700, "h": 260 } },
+      { "item": "viz_call_vs_meeting",          "type": "block", "position": { "x": 740, "y": 160, "w": 680, "h": 260 } },
+      { "item": "viz_department_bar",           "type": "block", "position": { "x": 20,  "y": 440, "w": 680, "h": 300 } },
+      { "item": "viz_device_distribution",      "type": "block", "position": { "x": 720, "y": 440, "w": 380, "h": 300 } },
+      { "item": "viz_weekly_call_heatmap",      "type": "block", "position": { "x": 1120,"y": 440, "w": 300, "h": 300 } },
+      { "item": "viz_department_adoption_table","type": "block", "position": { "x": 20,  "y": 760, "w": 840, "h": 280 } },
+      { "item": "viz_top_heavy_callers",        "type": "block", "position": { "x": 880, "y": 760, "w": 540, "h": 280 } }
+    ],
+    "globalInputs": ["input_timerange", "input_department"]
+  }
+}

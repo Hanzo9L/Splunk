@@ -1,0 +1,344 @@
+{
+  "title": "Teams Call Quality Deep Dive",
+  "description": "Bank of America — Stream-level call quality analysis: MOS scores, jitter, packet loss, codec distribution, and worst-performing subnets/buildings.",
+  "visualizations": {
+    "viz_avg_mos_kpi": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_avg_mos_kpi" },
+      "title": "Avg MOS",
+      "options": {
+        "colorMode": "block",
+        "majorColor": "#FFFFFF",
+        "majorFontSize": 36,
+        "unit": " / 5.0",
+        "unitPosition": "after",
+        "showTrendIndicator": true,
+        "thresholds": {
+          "fieldColors": {
+            "ranges": [
+              { "from": 0,   "to": 2.5, "value": "#C62828" },
+              { "from": 2.5, "to": 3.5, "value": "#E65100" },
+              { "from": 3.5, "to": 5.0, "value": "#2E7D32" }
+            ]
+          }
+        }
+      }
+    },
+    "viz_poor_stream_pct": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_poor_stream_pct" },
+      "title": "Poor Stream Rate",
+      "options": {
+        "colorMode": "block",
+        "majorColor": "#FFFFFF",
+        "majorFontSize": 36,
+        "unit": "%",
+        "unitPosition": "after",
+        "showTrendIndicator": true,
+        "thresholds": {
+          "fieldColors": {
+            "ranges": [
+              { "from": 0,  "to": 3,  "value": "#2E7D32" },
+              { "from": 3,  "to": 10, "value": "#E65100" },
+              { "from": 10, "to": 100,"value": "#C62828" }
+            ]
+          }
+        }
+      }
+    },
+    "viz_avg_jitter_kpi": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_avg_jitter_kpi" },
+      "title": "Avg Jitter",
+      "options": {
+        "colorMode": "block",
+        "majorColor": "#FFFFFF",
+        "majorFontSize": 36,
+        "unit": " ms",
+        "unitPosition": "after",
+        "showTrendIndicator": true,
+        "thresholds": {
+          "fieldColors": {
+            "ranges": [
+              { "from": 0,  "to": 30,  "value": "#2E7D32" },
+              { "from": 30, "to": 75,  "value": "#E65100" },
+              { "from": 75, "to": 9999,"value": "#C62828" }
+            ]
+          }
+        }
+      }
+    },
+    "viz_avg_packet_loss_kpi": {
+      "type": "splunk.singlevalue",
+      "dataSources": { "primary": "ds_avg_packet_loss_kpi" },
+      "title": "Avg Packet Loss",
+      "options": {
+        "colorMode": "block",
+        "majorColor": "#FFFFFF",
+        "majorFontSize": 36,
+        "unit": "%",
+        "unitPosition": "after",
+        "showTrendIndicator": true,
+        "thresholds": {
+          "fieldColors": {
+            "ranges": [
+              { "from": 0,   "to": 0.5, "value": "#2E7D32" },
+              { "from": 0.5, "to": 2.0, "value": "#E65100" },
+              { "from": 2.0, "to": 100, "value": "#C62828" }
+            ]
+          }
+        }
+      }
+    },
+    "viz_mos_heatmap": {
+      "type": "splunk.column",
+      "dataSources": { "primary": "ds_mos_by_hour" },
+      "title": "MOS Score by Hour of Day (Weekly Average)",
+      "options": {
+        "xAxisTitleText": "Hour of Day (0-23)",
+        "yAxisTitleText": "Average MOS Score",
+        "yAxisScale": { "min": 0, "max": 5 },
+        "seriesColors": ["#1565C0"],
+        "showDataLabels": false,
+        "annotationColor": "#D9534F"
+      }
+    },
+    "viz_jitter_trend": {
+      "type": "splunk.area",
+      "dataSources": { "primary": "ds_jitter_trend" },
+      "title": "Jitter Over Time",
+      "options": {
+        "xAxisTitleText": "Time",
+        "yAxisTitleText": "Jitter (ms)",
+        "seriesColors": ["#F57C00"],
+        "areaOpacity": 0.3,
+        "lineWidth": 2,
+        "nullValueDisplay": "connect"
+      }
+    },
+    "viz_packet_loss_trend": {
+      "type": "splunk.area",
+      "dataSources": { "primary": "ds_packet_loss_trend" },
+      "title": "Packet Loss Over Time",
+      "options": {
+        "xAxisTitleText": "Time",
+        "yAxisTitleText": "Packet Loss (%)",
+        "seriesColors": ["#D9534F"],
+        "areaOpacity": 0.3,
+        "lineWidth": 2,
+        "nullValueDisplay": "connect"
+      }
+    },
+    "viz_rtt_trend": {
+      "type": "splunk.line",
+      "dataSources": { "primary": "ds_rtt_trend" },
+      "title": "Round-Trip Time Over Time",
+      "options": {
+        "xAxisTitleText": "Time",
+        "yAxisTitleText": "RTT (ms)",
+        "seriesColors": ["#7B1FA2"],
+        "lineWidth": 2,
+        "nullValueDisplay": "connect"
+      }
+    },
+    "viz_worst_subnets": {
+      "type": "splunk.table",
+      "dataSources": { "primary": "ds_worst_subnets" },
+      "title": "Worst Performing Subnets / Buildings",
+      "options": {
+        "count": 15,
+        "columnFormat": {
+          "avg_mos": {
+            "data": {
+              "type": "color",
+              "scale": {
+                "type": "range",
+                "field": "avg_mos",
+                "ranges": [
+                  { "from": 0,   "to": 2.5, "background": "#FFCDD2", "text": "#B71C1C" },
+                  { "from": 2.5, "to": 3.5, "background": "#FFF3E0", "text": "#E65100" },
+                  { "from": 3.5, "to": 5.0, "background": "#E8F5E9", "text": "#1B5E20" }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "viz_codec_distribution": {
+      "type": "splunk.pie",
+      "dataSources": { "primary": "ds_codec_distribution" },
+      "title": "Audio Codec Distribution",
+      "options": {
+        "showDonutHole": true,
+        "legendDisplay": "right",
+        "showPercent": true,
+        "seriesColors": ["#1565C0","#0288D1","#00ACC1","#00897B","#43A047"]
+      }
+    },
+    "viz_quality_by_device": {
+      "type": "splunk.bar",
+      "dataSources": { "primary": "ds_quality_by_device" },
+      "title": "Avg MOS by Device Type",
+      "options": {
+        "xAxisTitleText": "Device Type",
+        "yAxisTitleText": "Average MOS",
+        "yAxisScale": { "min": 0, "max": 5 },
+        "seriesColors": ["#1565C0"],
+        "showDataLabels": true,
+        "legendDisplay": "none"
+      }
+    },
+    "viz_quality_by_network": {
+      "type": "splunk.bar",
+      "dataSources": { "primary": "ds_quality_by_network" },
+      "title": "Avg MOS by Network Type",
+      "options": {
+        "xAxisTitleText": "Network Type",
+        "yAxisTitleText": "Average MOS",
+        "yAxisScale": { "min": 0, "max": 5 },
+        "seriesColors": ["#0288D1"],
+        "showDataLabels": true,
+        "legendDisplay": "none"
+      }
+    }
+  },
+  "dataSources": {
+    "ds_avg_mos_kpi": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | stats avg(audio_mos) as avg_mos | eval avg_mos=round(avg_mos,2)",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_poor_stream_pct": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | eval poor=if(audio_mos<3.5,1,0) | stats avg(poor)*100 as poor_pct | eval poor_pct=round(poor_pct,1)",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_avg_jitter_kpi": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | stats avg(audio_jitter_ms) as avg_jitter | eval avg_jitter=round(avg_jitter,1)",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_avg_packet_loss_kpi": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | eval pkt_loss_pct=packet_loss_rate*100 | stats avg(pkt_loss_pct) as avg_pkt_loss | eval avg_pkt_loss=round(avg_pkt_loss,2)",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_mos_by_hour": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | eval hour=tonumber(strftime(_time,\"%H\")) | stats avg(audio_mos) as avg_mos by hour | eval avg_mos=round(avg_mos,2) | sort hour",
+        "queryParameters": { "earliest": "-7d@d", "latest": "now" }
+      }
+    },
+    "ds_jitter_trend": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | timechart span=30m avg(audio_jitter_ms) as avg_jitter | eval avg_jitter=round(avg_jitter,1)",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_packet_loss_trend": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | eval pkt_loss_pct=packet_loss_rate*100 | timechart span=30m avg(pkt_loss_pct) as avg_packet_loss | eval avg_packet_loss=round(avg_packet_loss,3)",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_rtt_trend": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | timechart span=30m avg(round_trip_time_ms) as avg_rtt | eval avg_rtt=round(avg_rtt,1)",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_worst_subnets": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | stats avg(audio_mos) as avg_mos, avg(audio_jitter_ms) as avg_jitter, avg(packet_loss_rate)*100 as avg_pkt_loss, count as stream_count by caller_subnet | eval avg_mos=round(avg_mos,2), avg_jitter=round(avg_jitter,1), avg_pkt_loss=round(avg_pkt_loss,2) | lookup teams_subnet_building_lookup subnet_prefix AS caller_subnet OUTPUT building_name, floor, region | sort avg_mos | head 15 | table caller_subnet, building_name, region, avg_mos, avg_jitter, avg_pkt_loss, stream_count",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_codec_distribution": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | where codec!=\"\" | stats count by codec | sort -count",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_quality_by_device": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | where caller_device_type!=\"\" | stats avg(audio_mos) as avg_mos, count as streams by caller_device_type | eval avg_mos=round(avg_mos,2) | sort -avg_mos | head 10",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    },
+    "ds_quality_by_network": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=teams_quality sourcetype=teams:cqd:stream | where caller_wifi!=\"\" | stats avg(audio_mos) as avg_mos, count as streams by caller_wifi | eval avg_mos=round(avg_mos,2) | rename caller_wifi AS network_type | sort -avg_mos",
+        "queryParameters": { "earliest": "$time.earliest$", "latest": "$time.latest$" }
+      }
+    }
+  },
+  "inputs": {
+    "input_timerange": {
+      "type": "input.timerange",
+      "options": {
+        "token": "time",
+        "defaultValue": { "earliest": "-24h@h", "latest": "now" }
+      },
+      "title": "Time Range"
+    },
+    "input_department": {
+      "type": "input.dropdown",
+      "options": {
+        "token": "department",
+        "defaultValue": "*",
+        "items": [{ "label": "All Departments", "value": "*" }],
+        "labelField": "department",
+        "valueField": "department"
+      },
+      "title": "Department",
+      "dataSources": {
+        "primary": {
+          "type": "ds.search",
+          "options": {
+            "query": "index=teams_calls sourcetype=teams:call:record | lookup teams_user_dept_lookup user_upn AS caller_upn OUTPUT department | stats count by department | sort department"
+          }
+        }
+      }
+    }
+  },
+  "layout": {
+    "type": "absolute",
+    "options": {
+      "width": 1440,
+      "height": 1100,
+      "display": "auto-scale"
+    },
+    "structure": [
+      { "item": "viz_avg_mos_kpi",          "type": "block", "position": { "x": 20,  "y": 20,  "w": 320, "h": 120 } },
+      { "item": "viz_poor_stream_pct",       "type": "block", "position": { "x": 360, "y": 20,  "w": 320, "h": 120 } },
+      { "item": "viz_avg_jitter_kpi",        "type": "block", "position": { "x": 700, "y": 20,  "w": 320, "h": 120 } },
+      { "item": "viz_avg_packet_loss_kpi",   "type": "block", "position": { "x": 1040,"y": 20,  "w": 380, "h": 120 } },
+      { "item": "viz_mos_heatmap",           "type": "block", "position": { "x": 20,  "y": 160, "w": 840, "h": 260 } },
+      { "item": "viz_codec_distribution",    "type": "block", "position": { "x": 880, "y": 160, "w": 540, "h": 260 } },
+      { "item": "viz_jitter_trend",          "type": "block", "position": { "x": 20,  "y": 440, "w": 460, "h": 220 } },
+      { "item": "viz_packet_loss_trend",     "type": "block", "position": { "x": 500, "y": 440, "w": 460, "h": 220 } },
+      { "item": "viz_rtt_trend",             "type": "block", "position": { "x": 980, "y": 440, "w": 440, "h": 220 } },
+      { "item": "viz_quality_by_device",     "type": "block", "position": { "x": 20,  "y": 680, "w": 680, "h": 240 } },
+      { "item": "viz_quality_by_network",    "type": "block", "position": { "x": 720, "y": 680, "w": 700, "h": 240 } },
+      { "item": "viz_worst_subnets",         "type": "block", "position": { "x": 20,  "y": 940, "w": 1400,"h": 280 } }
+    ],
+    "globalInputs": ["input_timerange", "input_department"]
+  }
+}
